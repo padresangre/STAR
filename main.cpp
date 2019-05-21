@@ -1,479 +1,364 @@
-#include <iostream>
+#include<iostream>
+using namespace std;
 
-#define tab "\t"
+#define delimiter "\n===========================================================\n"
 
-/*
-TODO:
-0. Вывести двумерный динамический массив на экран, используя Арифметику указателей, и оператор разыменования;
-1. Написать функцию ??? push_row_back(???), которая добавляет пустую строку (заполненную нулями) в конец массива;
-2. Написать функцию ??? push_row_front(???), которая добавляет пустую строку в начало массива;
-3. Написать функцию ??? insert_row(???), которая добавляет пустую строку в массив по указанному индексу;
-4. Написать функцию ??? pop_row_back(???), которая удаляет строку из конца массива;
-5. Написать функцию ??? pop_row_front(???), которая удаляет строку с начала массива;
-6. Написать функцию ??? erase_row(???), которая удаляет строку из массива, по указанному индексу;
-*/
-//ROWS
-void FillRand(int** Arr, const int m, const int n);
-void Print(int** Arr, const int m, const int n);
-void Delete(int** Arr, const int m, const int n);
+template<typename T>T** Allocale(const int m, const int n);
+template<typename T>void FillRand(T Arr[], const int n, int minRand = 0, int maxRand = 100);
+template<typename T>void FillRand(T** Arr, const int m, const int n);
+template<typename T>void Print(T** Arr, const int m, const int n);
+template<typename T>void Delete(T*** Arr, const int m);
+template<typename T>T** AddRow(T** Arr, int& m, const int n);	//Добавляет строку в начало
+template<typename T>T** AppendRow(T** Arr, int& m, const int n);
+template<typename T>T** InsertRow(T** Arr, int& m, const int n, int Index);
+template<typename T>T** DelFirstRow(T** Arr, int& m);
+template<typename T>T** DelLastRow(T** Arr, int& m);
+template<typename T>T** EraseRow(T** Arr, int& m, int Index);
+template<typename T>void AppendCol(T **Arr, const int m, int &n);
+template<typename T>void AddColls(T** Arr, const int m, int& n);
+template<typename T>void AddColIndex(T** Arr, const int m, int& n, int Index);
+template<typename T>void DellColIndex(T** Arr, const int m, int& n, int Index);
+template<typename T>void DellendCol(T **Arr, const int m, int &n);
+template<typename T>void DellColl(T **Arr, const int m, int &n);
 
-int** PushRowBack(int** Arr, int& m, int& n);
-int** PushRowFront(int** Arr, int& m, int& n);
-int** InsertRow(int** Arr, int& m, int& n, long long int& index);
-
-int** PopRowBack(int** Arr, int& m, int& n);
-int** PopRowFront(int** Arr, int& m, int& n);
-int** EraseRow(int** Arr, int& m, int& n, long long int& index);
-
-//COLS
-int** PushColBack(int** Arr, int& m, int& n);
-int** PushColFront(int** Arr, int& m, int& n);
-int** InsertCol(int** Arr, const int m, int& n, long long int& index);
-
-int** PopColBack(int** Arr, const int m, int& n);
-int** PopColFront(int** Arr, const int m, int& n);
-int** EraseCol(int** Arr, const int m, int& n, long long int& index);
+typedef double DataType;
 
 void main()
 {
-	setlocale(0, "");
-	for (int i = 0; i < 85; i++)
-	{
-		if (i >= 40 && i < 41)
-		{
-			std::cout << "---ROWS---";
-		}
-		else
-			std::cout << " ";
-	}
-	std::cout << std::endl;
-	for (int i = 0; i < 85; i++)
-	{
-		std::cout << "=";
-	}
-	std::cout << std::endl;
+	setlocale(LC_ALL, "Russian");
 
-	int m;		//Строки
-	int n;		//Элемент строки
-	std::cout << "Введите количество строк: "; std::cin >> m;
-	std::cout << "Введиет количество элементов строк: "; std::cin >> n;
-	std::cout << std::endl;
+	int m;
+	int n;
+	int Index;
+	cout << "Введите количество строк: "; cin >> m;
+	cout << "Введите количество столбцов: "; cin >> n;
+	DataType** Arr = Allocale<DataType>(m, n);  //** Arr - Указатель на массив указателей
 
-	int** Arr = new int*[m];
-	for (int i = 0; i < m; i++)
-	{
-		Arr[i] = new int[n] {};
-	}
+												//Объявление ДДинМ:
+												//Allocale(m, n);
+												//////////////////////////////////////////
+
+												/*for (int i = 0; i < m; i++)
+												{
+												for (int j = 0; j < n; j++)
+												{
+												cout << Arr[i][j] << "\t";
+												}
+												cout << endl;
+												}
+												cout << endl;*/
+
 	FillRand(Arr, m, n);
 	Print(Arr, m, n);
+	cout << delimiter << endl;
 
-	for (int i = 0; i < 68; i++)
-	{
-		if (i >= 35 && i <= 35)
-		{
-			std::cout << "---PushRowBack---";
-		}
-		std::cout << "=";
-	}
-	// ДОБАВЛЕНИЕ ПУСТОЙ СТРОКИ В КОНЕЦ ДДМ
-	std::cout << std::endl;
-	std::cout << std::endl;
-	Arr = PushRowBack(Arr, m, n);
+	//Добавление строки в конец:
+	cout << "Добавление строки в конец массива: " << endl;
+	Arr = AppendRow(Arr, m, n);
+	FillRand(Arr[m - 1], n, 0, 1000);
 	Print(Arr, m, n);
+	cout << delimiter << endl;
 
-	for (int i = 0; i < 67; i++)
-	{
-		if (i >= 35 && i <= 35)
-		{
-			std::cout << "---PushRowFront---";
-		}
-		std::cout << "=";
-	}
-	//ДОБАВЛЕНИЕ ПУСТОЙ СТРОКИ В НАЧАЛО ДДМ
-	std::cout << std::endl;
-	std::cout << std::endl;
-	Arr = PushRowFront(Arr, m, n);
+	//Добавление строки в начало:
+	cout << "Добавление строки в начало массива: " << endl;
+	Arr = AddRow(Arr, m, n);
+	FillRand(Arr[0], n, 0, 1000);
 	Print(Arr, m, n);
+	cout << delimiter << endl;
 
-	for (int i = 0; i < 70; i++)
-	{
-		if (i >= 36 && i <= 36)
-		{
-			std::cout << "---InsertRow---";
-		}
-		std::cout << "=";
-	}
-	//ДОБАВЛЕНИЕ ПУСТОЙ СТРОЧКИ ПО ИНДЕКСУ В ДДМ
-	std::cout << std::endl;
-	std::cout << std::endl;
-	long long int index;
-	Arr = InsertRow(Arr, m, n, index);
+	//Добавление строки по индексу:
+	cout << "Добавление строки по индексу: " << endl;
+	cout << "Введите индекс добавляемой строки: ";
+	cin >> Index;
+	Arr = InsertRow(Arr, m, n, Index);
+	FillRand(Arr[Index], n, 0, 1000);
 	Print(Arr, m, n);
+	cout << delimiter << endl;
 
-	for (int i = 0; i < 69; i++)
-	{
-		if (i >= 35 && i <= 35)
-		{
-			std::cout << "---PopRowBack---";
-		}
-		std::cout << "=";
-	}
-	//УДАЛЕНИЕ ПОСЛЕДНЕЙ СТРОЧКИ В ДДМ
-	std::cout << std::endl;
-	std::cout << std::endl;
-	Arr = PopRowBack(Arr, m, n);
+	//Удаление первой строки:
+	cout << "Удаление первой строки:\n";
+	//int *FirstRow = Arr[0];
+	Arr = DelFirstRow(Arr, m);
 	Print(Arr, m, n);
+	cout << delimiter << endl;
+	//cout << "А вот после ее удаления, мы ее видим :-)\n";
+	//for (int i = 0; i < n; i++)cout << FirstRow[i] << "\t"; cout << endl;
 
-	for (int i = 0; i < 68; i++)
-	{
-		if (i >= 34 && i <= 34)
-		{
-			std::cout << "---PopRowFront---";
-		}
-		std::cout << "=";
-	}
-	//УДАЛЕНИЕ ПЕРВОЙ СТРОЧКИ В ДДМ
-	std::cout << std::endl;
-	std::cout << std::endl;
-	Arr = PopRowFront(Arr, m, n);
+	//Удаление последней строки:
+	cout << "Удаление последней строки:\n";
+	Arr = DelLastRow(Arr, m);
 	Print(Arr, m, n);
+	cout << delimiter << endl;
 
-	for (int i = 0; i < 71; i++)
-	{
-		if (i >= 35 && i <= 35)
-		{
-			std::cout << "---EraseRow---";
-		}
-		std::cout << "=";
-	}
-	//УДАЛЕНИЕ СТРОЧКИ ПО ИНДЕКСУ В ДДМ
-	std::cout << std::endl;
-	std::cout << std::endl;
-	Arr = EraseRow(Arr, m, n, index);
+	//Удаление строки по индексу:
+	cout << "Удаление строки по индексу: ";
+	cin >> Index;
+	Arr = EraseRow(Arr, m, Index);
 	Print(Arr, m, n);
-	for (int i = 0; i < 85; i++)
-	{
-		std::cout << "=";
-	}
-	std::cout << std::endl;
-	for (int i = 0; i < 85; i++)
-	{
-		if (i >= 40 && i < 41)
-		{
-			std::cout << "---COLS---";
-		}
-		else
-			std::cout << " ";
-	}
-	std::cout << std::endl;
-	for (int i = 0; i < 85; i++)
-	{
-		std::cout << "=";
-	}
-	std::cout << std::endl;
-	std::cout << std::endl;
-	FillRand(Arr, m, n);
+	cout << delimiter << endl;
+
+	//Добавление строки в конец:
+	cout << "Добавление столбца в конец массива: " << endl;
+	AppendCol(Arr, m, n);
+	//FillRand(Arr[n - 1], n, 0, 1000);
 	Print(Arr, m, n);
+	cout << delimiter << endl;
 
-	for (int i = 0; i < 68; i++)
-	{
-		if (i >= 35 && i <= 35)
-		{
-			std::cout << "---PushColBack---";
-		}
-		std::cout << "=";
-	}
-	// ДОБАВЛЕНИЕ ПУСТОГО ЭЛЕМЕНТА СТРОКИ В КОНЕЦ ДДМ
-
-	std::cout << std::endl;
-	PushColBack(Arr, m, n);
+	cout << "Добавление столбца в начало массива: " << endl;
+	AddColls(Arr, m, n);
 	Print(Arr, m, n);
-	std::cout << std::endl;
+	cout << delimiter << endl;
 
-	for (int i = 0; i < 67; i++)
-	{
-		if (i >= 35 && i <= 35)
-		{
-			std::cout << "---PushColFront---";
-		}
-		std::cout << "=";
-	}
-	// ДОБАВЛЕНИЕ ПУСТОГО ЭЛЕМЕНТА СТРОКИ В НАЧАЛО ДДМ
-	std::cout << std::endl;
-	std::cout << std::endl;
-	PushColFront(Arr, m, n);
+	Index = 0;
+	cout << "Введите индекс добавляемого столбца: ";
+	cin >> Index;
+	AddColIndex(Arr, m, n, Index);
 	Print(Arr, m, n);
-	std::cout << std::endl;
+	cout << delimiter << endl;
 
-	for (int i = 0; i < 70; i++)
-	{
-
-		if (i >= 36 && i <= 36)
-		{
-			std::cout << "---InsertCol---";
-		}
-		std::cout << "=";
-	}
-	//ДОБАВЛЕНИЕ ПУСТОГО ЭЛЕМЕНТА СТРОКИ ПО УКАЗАНОМУ ИНДЕКСУ В ДДМ
-	std::cout << std::endl;
-	std::cout << std::endl;
-	std::cout << "Введите элемент строки: "; std::cin >> index;
-	InsertCol(Arr, m, n, index);
+	cout << "Удаление столбца по индексу" << endl;
+	cout << "Введите индекс удаляемого столбца: "; cin >> Index;
+	DellColIndex(Arr, m, n, Index);
 	Print(Arr, m, n);
-	std::cout << std::endl;
+	cout << delimiter << endl;
 
-	for (int i = 0; i < 68; i++)
-	{
-
-		if (i >= 35 && i <= 35)
-		{
-			std::cout << "---PopColBack---";
-		}
-		std::cout << "=";
-	}
-	//УДАЛЕНИЕ ПОСЛЕДНЕЙ СТРОКИ В ДДМ
-	std::cout << std::endl;
-	std::cout << std::endl;
-	PopColBack(Arr, m, n);
+	cout << "Удаление столбца в конце массива" << endl;
+	DellendCol(Arr, m, n);
 	Print(Arr, m, n);
-	std::cout << std::endl;
-	for (int i = 0; i < 67; i++)
-	{
+	cout << delimiter << endl;
 
-		if (i >= 34 && i <= 34)
-		{
-			std::cout << "---PopColFront---";
-		}
-		std::cout << "=";
-	}
-	//УДАЛЕНИЕ ПЕРВОЙ СТРОКИ В ДДМ
-	std::cout << std::endl;
-	std::cout << std::endl;
-	PopColFront(Arr, m, n);
+	cout << "Удаление столбца в начале массива" << endl;
+	DellColl(Arr, m, n);
 	Print(Arr, m, n);
-	std::cout << std::endl;
+	cout << delimiter << endl;
 
-	for (int i = 0; i < 70; i++)
-	{
-
-		if (i >= 36 && i <= 36)
-		{
-			std::cout << "---EraseCol---";
-		}
-		std::cout << "=";
-	}
-	//УДАЛЕНИЕ ЭЛЕМЕНТА СТРОКИ ПО ИНДЕКСУ 
-	std::cout << std::endl;
-	std::cout << std::endl;
-	std::cout << "Введите интекс: "; std::cin >> index;
-	EraseCol(Arr, m, n, index);
-	Print(Arr, m, n);
-	std::cout << std::endl;
-
-	Delete(Arr, m, n);
+	//Удаление ДДинМ:
+	Delete(&Arr, m);
 }
-//ROWS
-void FillRand(int** Arr, const int m, const int n)
+template<typename T>T** Allocale(const int m, const int n)
+{
+	T **Arr = new T*[m];
+	for (int i = 0; i < m; i++)
+	{
+		Arr[i] = new T[n]{};
+	}
+	return Arr;
+}
+template<typename T>void FillRand(T** Arr, const int m, const int n)
 {
 	for (int i = 0; i < m; i++)
 	{
 		for (int j = 0; j < n; j++)
 		{
-			*(*(Arr + i) + j) = rand() % (80 - 50) + 50;
+			Arr[i][j] = rand() % 100 / 10.;
 		}
 	}
 }
-void Print(int** Arr, const int m, const int n)
+template<typename T>void FillRand(T Arr[], const int n, int minRand, int maxRand)
+{
+	for (int i = 0; i < n; i++)
+	{
+		Arr[i] = rand() % (maxRand - minRand) + minRand;
+	}
+}
+template<typename T>void Print(T** Arr, const int m, const int n)
 {
 	for (int i = 0; i < m; i++)
 	{
 		for (int j = 0; j < n; j++)
 		{
-			std::cout << Arr[i][j] << tab;
+			cout << Arr[i][j] << "\t";
 		}
-		std::cout << std::endl;
+		cout << endl;
 	}
-	std::cout << std::endl;
 }
-void Delete(int** Arr, const int m, const int n)
+template<typename T>void Delete(T*** Arr, const int m)
 {
 	for (int i = 0; i < m; i++)
 	{
-		delete[] Arr[i];
+		delete[](*Arr)[i];
 	}
-	delete[] Arr;
+	delete[] * Arr;
+	*Arr = nullptr;
 }
-
-int** PushRowBack(int** Arr, int& m, int& n)
+template<typename T>T** AddRow(T** Arr, int& m, const int n)
 {
-	int** Buffer = new int*[m + 1];
+	T** Buff = new T*[m + 1];
 	for (int i = 0; i < m; i++)
 	{
-		Buffer[i] = Arr[i];
+		Buff[i + 1] = Arr[i];
 	}
 	delete[] Arr;
-	Arr = Buffer;
-	Arr[m] = new int[n] {};
+	Buff[0] = new T[n]{};
 	m++;
+	Arr = Buff;
+	Buff = nullptr;
 	return Arr;
 }
-int** PushRowFront(int** Arr, int& m, int& n)
+template<typename T>T** AppendRow(T** Arr, int& m, const int n)
 {
-	int** Buffer = new int*[m + 1];
+	T** Buff = new T*[m + 1];
 	for (int i = 0; i < m; i++)
 	{
-		Buffer[i + 1] = Arr[i];
+		Buff[i] = Arr[i];
 	}
 	delete[] Arr;
-	Arr = Buffer;
-	Arr[0] = new int[n] {};
+	Buff[m] = new T[n]{};
 	m++;
+	Arr = Buff;
+	Buff = nullptr;
 	return Arr;
 }
-int** InsertRow(int** Arr, int& m, int& n, long long int& index)
+template<typename T>T** InsertRow(T** Arr, int& m, const int n, int Index)
 {
-	std::cout << "Введите индекс: "; std::cin >> index;
-	if (index > m || index < 0)
+	T** Buff = new T*[m + 1];
+	for (int i = 0; i < Index; i++)
 	{
-		std::cout << "Error!";
-		std::cout << std::endl;
-		return InsertRow(Arr, m, n, index);
+		Buff[i] = Arr[i];
 	}
-	int** Buffer = new int*[m + 1];
-	for (int i = 0; i < index; i++)
+	for (int i = Index; i < m; i++)
 	{
-		Buffer[i] = Arr[i];
-	}
-	for (int i = index; i < m; i++)
-	{
-		Buffer[i + 1] = Arr[i];
+		Buff[i + 1] = Arr[i];
 	}
 	delete[] Arr;
-	Arr = Buffer;
-	Arr[index] = new int [n] {};
+	Buff[Index] = new T[n]{};
 	m++;
-
+	Arr = Buff;
+	Buff = nullptr;
 	return Arr;
 }
-
-int** PopRowBack(int** Arr, int& m, int& n)
+template<typename T>T** DelFirstRow(T** Arr, int& m)
 {
-	int** Buffer = new int*[--m];
+	T** Buff = new T*[--m];
 	for (int i = 0; i < m; i++)
 	{
-		Buffer[i] = Arr[i];
+		Buff[i] = Arr[i + 1];
 	}
+	delete[] Arr[0];
 	delete[] Arr;
-	Arr = Buffer;
-	//m--;
+	//Buff[0] = new int[n] {};
+	Arr = Buff;
+	Buff = nullptr;
 	return Arr;
 }
-int** PopRowFront(int** Arr, int& m, int& n)
+template<typename T>T** DelLastRow(T** Arr, int& m)
 {
-	int** Buffer = new int*[m - 1];
-	for (int i = 0; i < m; i++)
-	{
-		Buffer[i] = Arr[i + 1];
-	}
-	delete[] Arr;
-	Arr = Buffer;
-	m--;
-	return Arr;
-}
-int** EraseRow(int** Arr, int& m, int& n, long long int& index)
-{
-	int** Buffer = new int*[m];
-	std::cout << "Введите индекс: "; std::cin >> index;
-	if (index > m || index < 0)
-	{
-		std::cout << "Error!";
-		std::cout << std::endl;
-		return EraseRow(Arr, m, n, index);
-	}
-	for (int i = 0; i < index; i++)
-	{
-		Buffer[i] = Arr[i];
-	}
-	for (int i = index; i < m; i++)
-	{
-		Buffer[i] = Arr[i + 1];
-	}
-	Arr = Buffer;
-	m--;
-	return Arr;
-}
+	T** Buff = new T*[--m];
 
-//COLS
-int** PushColBack(int** Arr, int& m, int& n)
-{
 	for (int i = 0; i < m; i++)
 	{
-		int* Buffer = new int[n + 1]{};
-		for (int j = 0; j < n; j++)
-		{
-			Buffer[j] = Arr[i][j];
-		}
+		Buff[i] = Arr[i];
+	}
+	delete[] Arr[m];
+	delete[] Arr;
+	//Buff[0] = new int[n] {};
+	Arr = Buff;
+	Buff = nullptr;
+	return Arr;
+}
+template<typename T>T** EraseRow(T** Arr, int& m, int Index)
+{
+	T** Buff = new T*[--m];
+	for (int i = 0; i < Index; i++)
+	{
+		Buff[i] = Arr[i];
+	}
+	for (int i = Index; i < m; i++)
+	{
+		Buff[i] = Arr[i + 1];
+	}
+	delete[] Arr[Index];
+	delete[] Arr;
+	//Buff[0] = new int[n] {};
+	Arr = Buff;
+	Buff = nullptr;
+	return Arr;
+}
+template<typename T>void AppendCol(T **Arr, const int m, int &n)
+{
+	T *Buffer;
+	for (int i = 0; i < m; i++)
+	{
+		Buffer = new T[n + 1]{};	//Создаем новую строку, на 1 элемент больше.
+		for (int j = 0; j < n; j++)Buffer[j] = Arr[i][j];
 		delete[] Arr[i];
 		Arr[i] = Buffer;
 	}
 	n++;
-	return Arr;
 }
-int** PushColFront(int** Arr, int& m, int& n)
+template<typename T>void AddColls(T** Arr, const int m, int& n)
 {
-	for (int i = 0; i < m; i++)
+	/*int** Buff = new int*[n + 1];
+	for (int i = 0; i < n; i++)
 	{
-		int* Buffer = new int[n + 1]{};
-		for (int j = 0; j < n; j++)
-		{
-			Buffer[j + 1] = Arr[i][j];
-		}
-		delete[] Arr[i];
-		Arr[i] = Buffer;
+	Buff[i + 1] = Arr[i];
 	}
+	delete[] Arr;
+	Buff[0] = new int[m] {};
 	n++;
-	return Arr;
-}
-int** InsertCol(int** Arr, const int m, int& n, long long int& index)
-{
-	for (int i = 0; i < m; i++)
-	{
-		int* Buffer = new int[n + 1]{};
-		for (int j = 0; j < index; j++)
-		{
-			Buffer[j] = Arr[i][j];
-		}
-		for (int j = index; j < n; j++)
-		{
-			Buffer[j + 1] = Arr[i][j];
-		}
-		delete[] Arr[i];
-		Arr[i] = Buffer;
-	}
-	n++;
-	return Arr;
-}
+	Arr = Buff;
+	Buff = nullptr;
+	return Arr;*/
 
-int** PopColBack(int** Arr, const int m, int& n)
-{
+	T *Buff;	//Указатель на буферный массив.
 	for (int i = 0; i < m; i++)
 	{
-		int* Buffer = new int[n] {};
-		for (int j = 0; j < n; j++)
-		{
-			Buffer[j] = Arr[i][j];
-		}
+		Buff = new T[n + 1]{};	//Создаем буферную строку.
+								//Копируем исходную строку в буферную:
+		for (int j = 0; j < n; j++)Buff[j + 1] = Arr[i][j];
+		delete[] Arr[i];	//Удаляем исходную строку.
+		Arr[i] = Buff;
+	}
+	n++;
+}
+template<typename T>void AddColIndex(T** Arr, const int m, int& n, int Index)
+{
+	T* Buff;
+	for (int i = 0; i < m; i++)
+	{
+		Buff = new T[n + 1]{};
+		for (int j = 0; j < Index; j++)Buff[j] = Arr[i][j];
+		for (int j = Index; j < n; j++)Buff[j + 1] = Arr[i][j];
+
+		delete[] Arr[i];
+		//Удаляем исх
+		Arr[i] = Buff;
+	}
+	n++;
+}
+template<typename T>void DellColIndex(T** Arr, const int m, int& n, int Index)
+{
+	T* Buff;
+	for (int i = 0; i < m; i++)
+	{
+		Buff = new T[n]{};
+		for (int j = 0; j < Index; j++)Buff[j] = Arr[i][j];
+		for (int j = Index; j < n; j++)Buff[j] = Arr[i][j + 1];
+
+		delete[] Arr[i];
+		//Удаляем исх
+		Arr[i] = Buff;
+	}
+	n--;
+}
+template<typename T>void DellendCol(T **Arr, const int m, int &n)
+{
+	T *Buffer;
+	for (int i = 0; i < m; i++)
+	{
+		Buffer = new T[n]{};
+		for (int j = 0; j < n; j++)Buffer[j] = Arr[i][j];
 		delete[] Arr[i];
 		Arr[i] = Buffer;
 	}
 	n--;
-	return Arr;
 }
-int** PopColFront(int** Arr, const int m, int& n)
+template<typename T>void DellColl(T **Arr, const int m, int &n)
 {
+	T *Buffer;
 	for (int i = 0; i < m; i++)
 	{
-		int*Buffer = new int[n] {};
+		Buffer = new T[n]{};
 		for (int j = 0; j < n; j++)
 		{
 			Buffer[j] = Arr[i][j + 1];
@@ -481,25 +366,4 @@ int** PopColFront(int** Arr, const int m, int& n)
 		delete[] Arr[i];
 		Arr[i] = Buffer;
 	}
-	n--;
-	return Arr;
-}
-int** EraseCol(int** Arr, const int m, int& n, long long int& index)
-{
-	for (int i = 0; i < m; i++)
-	{
-		int* Buffer = new int[n] {};
-		for (int j = 0; j < index; j++)
-		{
-			Buffer[j] = Arr[i][j];
-		}
-		for (int j = index; j < n; j++)
-		{
-			Buffer[j] = Arr[i][j + 1];
-		}
-		delete[] Arr[i];
-		Arr[i] = Buffer;
-	}
-	n--;
-	return Arr;
 }
